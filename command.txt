@@ -1,2 +1,4 @@
 cat test.sh | gerp test 临时输出内容
 tail -1 ~/.bash_profile 输出最后一行
+touch a.txt 文件创建
+man test 查看文件常用参数
