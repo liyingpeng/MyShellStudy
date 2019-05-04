@@ -1,14 +1,22 @@
 #!/bin/bash
 
-if [[ "$1" = "push" ]]; then
+[ "$1" = 'push' ] && {
 	git add -A
     git commit -m "$2"
     git push
-elif [[ "$1" == "commit" ]]; then
+    exist 0
+}
+
+[ "$1" = 'commit' ] && {
 	git add .
    	git commit -m "$2"
-elif [[ "$1" == "open" ]]; then
+    exist 0
+}
+
+[ "$1" = 'open' ] && {
 	open *.xcodeproj
-else
-	git st
-fi
+    exist 0
+}
+
+git st
+exist 1
