@@ -1,0 +1,15 @@
+常用脚本添加流程
+注意：zsh 默认不会读取~/.bash_profile。 echo "source ~/.bash_profile" >> .zshrc即可
+
+1. 如何将脚本命令全句话 eg ： gitme.sh
+将脚本文件copy到 /usr/local/bin 目录下
+或者创建软链接ln -s /usr/local/bin/gitme.sh gitme
+
+2. 快速添加别名
+echo "alias vi='vim'" >>/etc/profile
+tail -1 /etc/profile
+alias vi='vim
+source /etc/profile
+
+3. 全局环境变量的配置
+.bash_profile 或 .bashrc文件中 或者全局配置文件中 /etc/bashrc 或 /etc/profile 中定义

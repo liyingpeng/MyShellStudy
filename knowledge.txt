@@ -1,0 +1,1 @@
+环境文件加载顺序：/etc/profile、 ~/.bash_profile、 ~/.bashrc 、/etc/bashrc等

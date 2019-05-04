@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$1" = "push" ]]; then
-	git add .
+	git add -A
     git commit -m "$2"
     git push
 elif [[ "$1" == "commit" ]]; then
