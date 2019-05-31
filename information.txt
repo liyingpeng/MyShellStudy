@@ -2,7 +2,7 @@
 注意：zsh 默认不会读取~/.bash_profile。 echo "source ~/.bash_profile" >> .zshrc即可
 
 1. 如何将脚本命令全句话 eg ： gitme.sh
-将脚本文件copy到 /usr/local/bin 目录下
+将脚本文件copy到 /usr/local/bin 目录下; chmod +x gitme.sh
 或者创建软链接ln -s /usr/local/bin/gitme.sh gitme
 
 2. 快速添加别名
