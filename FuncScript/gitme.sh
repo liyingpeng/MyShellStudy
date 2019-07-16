@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# 注意gitme push 操作 会全量提交改动到远端，需要自己检查修改，以免提交不必要改动
+# todo 添加确认阻塞操作，避免不小心提交过多内容
 [ "$1" = 'push' ] && {
 	git add -A
     git commit -m "$2"
@@ -29,6 +31,9 @@
 		git fetch upstream $currentBranch
 		exit 0
 	}
+
+# 默认执行-o操作
+	git fetch origin $currentBranch
     exit 0
 }
 
