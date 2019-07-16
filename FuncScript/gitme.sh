@@ -3,9 +3,12 @@
 # 注意gitme push 操作 会全量提交改动到远端，需要自己检查修改，以免提交不必要改动
 # todo 添加确认阻塞操作，避免不小心提交过多内容
 [ "$1" = 'push' ] && {
+	# 获取当前分支名
+	currentBranch=`git symbolic-ref --short -q HEAD`
+
 	git add -A
     git commit -m "$2"
-    git push
+    git push --set-upstream origin $currentBranch
     exit 0
 }
 
@@ -41,6 +44,9 @@
 [ "$1" = 'pull' ] && {
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
+
+	git branch --set-upstream-to=origin/$currentBranch
+
 	[ "$2" = '-o' ] && {
 		git fetch origin $currentBranch
 		git rebase origin/$currentBranch
@@ -49,6 +55,13 @@
 	[ "$2" = '-u' ] && {
 		git fetch upstream $currentBranch
 		git rebase upstream/$currentBranch
+		exit 0
+	}
+
+	[ "$2" = '-up' ] && {
+		git fetch upstream $currentBranch
+		git rebase upstream/$currentBranch
+		git push
 		exit 0
 	}
 
