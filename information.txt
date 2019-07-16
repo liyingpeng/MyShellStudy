@@ -4,6 +4,7 @@
 1. 如何将脚本命令全句话 eg ： gitme.sh
 将脚本文件copy到 /usr/local/bin 目录下; chmod +x gitme.sh
 或者创建软链接ln -s /usr/local/bin/gitme.sh gitme
+更新gitme cp /Users/liyingpeng/MyShellStudy/FuncScript/gitme.sh  gitme
 
 2. 快速添加别名
 echo "alias vi='vim'" >>/etc/profile
