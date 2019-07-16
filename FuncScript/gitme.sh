@@ -12,6 +12,15 @@
     exit 0
 }
 
+# 该命令只应该用于创建分支后 提交到远端 不应带任何修改信息
+[ "$1" = 'pushtoupstream' ] && {
+	# 获取当前分支名
+	currentBranch=`git symbolic-ref --short -q HEAD`
+    git push --set-upstream upstream $currentBranch
+	git branch --set-upstream-to=origin/$currentBranch
+    exit 0
+}
+
 [ "$1" = 'commit' ] && {
 	git add .
    	git commit -m "$2"
@@ -26,6 +35,9 @@
 [ "$1" = 'fetch' ] && {
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
+
+	git branch --set-upstream-to=origin/$currentBranch
+
 	[ "$2" = '-o' ] && {
 		git fetch origin $currentBranch
 		exit 0
@@ -41,6 +53,7 @@
 }
 
 # 默认gitme 以 rebase方式 合并
+# TODO 添加错误处理 如果没有upstream 分支怎么办
 [ "$1" = 'pull' ] && {
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
@@ -65,6 +78,14 @@
 		exit 0
 	}
 
+	[ "$2" = '-upi' ] && {
+		git fetch upstream $currentBranch
+		git rebase upstream/$currentBranch
+		git push
+		pod install
+		exit 0
+	}
+
 # 默认执行 -o 操作
 	git fetch origin $currentBranch
 	git rebase origin/$currentBranch
@@ -73,4 +94,4 @@
 
 # 默认没有命中任何参数直接gst
 git st
-exist 1
+exit 1
