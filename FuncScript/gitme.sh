@@ -28,7 +28,7 @@
 }
 
 [ "$1" = 'open' ] && {
-	open *.xcodeproj
+	open *.xcworkspace
     exit 0
 }
 
