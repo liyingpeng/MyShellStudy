@@ -56,50 +56,52 @@
 # 默认gitme 以 rebase方式 合并
 # TODO 添加错误处理 如果没有upstream 分支怎么办
 [ "$1" = 'pull' ] && {
+	# 过滤掉第一个pull 参数
+	shift
+
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
 
 	git branch --set-upstream-to=origin/$currentBranch
 
-	[ "$2" = '-o' ] && {
+	if [ ! -n "$1" ]; then
+		# 默认执行 -o 操作
 		git fetch origin $currentBranch
 		git rebase origin/$currentBranch
-		exit 0
-	}
-	[ "$2" = '-u' ] && {
-		git fetch upstream $currentBranch
-		git rebase upstream/$currentBranch
-		exit 0
-	}
-
-	[ "$2" = '-up' ] && {
-		git fetch upstream $currentBranch
-		git rebase upstream/$currentBranch
-		git push
-		exit 0
-	}
-
-	[ "$2" = '-upi' ] && {
-		git fetch upstream $currentBranch
-		git rebase upstream/$currentBranch
-		git push
-		pod install
-		exit 0
-	}
-
-	[ "$2" = '-upio' ] && {
-		git fetch upstream $currentBranch
-		git rebase upstream/$currentBranch
-		git push
-		pod install
 		gitme open
-		exit 0
-	}
+	    exit 0
+	fi
 
-# 默认执行 -o 操作
-	git fetch origin $currentBranch
-	git rebase origin/$currentBranch
-    exit 0
+	while getopts "upio" arg #选项后面的冒号表示该选项需要参数
+	do
+        case $arg in
+        	o)
+                git fetch origin $currentBranch
+				git rebase origin/$currentBranch
+				checkError
+                ;;
+            u)
+                git fetch upstream $currentBranch
+				git rebase upstream/$currentBranch
+				checkError
+                ;;
+	        p)
+                git push
+                checkError
+                ;;
+            i)
+                pod install
+                checkError
+                ;;
+            ?)  #当有不认识的选项的时候arg为?
+	            echo "unkonw argument"
+		        exit 1
+		        ;;
+        esac
+	done
+
+	gitme open
+	exit 0
 }
 
 # TODO: gitlab merge_request docs : https://docs.gitlab.com/ee/api/merge_requests.html
@@ -123,3 +125,9 @@
 # 默认没有命中任何参数直接gst
 git st
 exit 1
+
+function checkError() {
+	if [[ $? -ne 0 ]]; then
+		exit 1
+	fi
+}
