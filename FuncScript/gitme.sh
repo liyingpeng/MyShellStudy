@@ -86,9 +86,35 @@
 		exit 0
 	}
 
+	[ "$2" = '-upio' ] && {
+		git fetch upstream $currentBranch
+		git rebase upstream/$currentBranch
+		git push
+		pod install
+		gitme open
+		exit 0
+	}
+
 # 默认执行 -o 操作
 	git fetch origin $currentBranch
 	git rebase origin/$currentBranch
+    exit 0
+}
+
+[ "$1" = 'pr' ] && {
+	# 获取当前分支名
+	currentBranch=`git symbolic-ref --short -q HEAD`
+	targetBranch=""
+	if [ ! -n "$2" ]; then
+		targetBranch=$currentBranch
+	else
+		targetBranch=$2
+	fi
+
+	webUrl="https://gitlab.p1staff.com/liyingpeng/putong-ios/merge_requests/new?utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=675&merge_request%5Bsource_branch%5D=${currentBranch}&merge_request%5Btarget_project_id%5D=269&merge_request%5Btarget_branch%5D=${targetBranch}"
+
+	open $webUrl
+
     exit 0
 }
 
