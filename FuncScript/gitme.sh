@@ -2,6 +2,7 @@
 
 # 注意gitme push 操作 会全量提交改动到远端，需要自己检查修改，以免提交不必要改动
 # todo 添加确认阻塞操作，避免不小心提交过多内容
+# todo 添加-pr参数（参数判断）
 [ "$1" = 'push' ] && {
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
@@ -101,6 +102,7 @@
     exit 0
 }
 
+# TODO: gitlab merge_request docs : https://docs.gitlab.com/ee/api/merge_requests.html
 [ "$1" = 'pr' ] && {
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
