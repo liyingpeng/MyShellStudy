@@ -65,6 +65,7 @@ set -o errexit
 
 	# 获取当前分支名
 	currentBranch=`git symbolic-ref --short -q HEAD`
+	targetBranch=$currentBranch
 
 	git branch --set-upstream-to=origin/$currentBranch
 
@@ -76,16 +77,21 @@ set -o errexit
 	    exit 0
 	fi
 
-	while getopts "upio" arg #选项后面的冒号表示该选项需要参数
+	while getopts "b:oupi" arg #选项后面的冒号表示该选项需要参数
 	do
         case $arg in
+        	b) 
+				if [ -n $OPTARG ]; then
+					targetBranch=$OPTARG
+				fi
+				;;
         	o)
-                git fetch origin $currentBranch
-				git rebase origin/$currentBranch
+                git fetch origin $targetBranch
+				git rebase origin/$targetBranch
                 ;;
             u)
-                git fetch upstream $currentBranch
-				git rebase upstream/$currentBranch
+                git fetch upstream $targetBranch
+				git rebase upstream/$targetBranch
                 ;;
 	        p)
                 git push
