@@ -122,9 +122,11 @@
     exit 0
 }
 
-# 默认没有命中任何参数直接gst
-git st
-exit 1
+[ "$1" = 'install' ] && {
+	pod install
+	gitme open
+    exit 0
+}
 
 function checkError() {
 	if [[ $? -ne 0 ]]; then
