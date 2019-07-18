@@ -58,7 +58,7 @@ set -o errexit
 
 # 默认gitme 以 rebase方式 合并
 # TODO 添加错误处理 如果没有upstream 分支怎么办
-# TODO 如何自动判断要不要install，判断更新文件中有没有podfile?
+# TODO 如何自动判断要不要install，判断更新文件中有没有podfile?，是否可以使用awk sed？
 [ "$1" = 'pull' ] && {
 	# 过滤掉第一个pull 参数
 	shift
@@ -94,7 +94,7 @@ set -o errexit
 				git rebase upstream/$targetBranch
                 ;;
 	        p)
-                git push
+                git push --set-upstream origin $currentBranch
                 ;;
             i)
                 pod install
