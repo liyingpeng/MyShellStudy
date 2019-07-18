@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shell 语句出错或者异常自动退出 不继续执行set -e 、set -o errexit
+set -o errexit
+
 # 注意gitme push 操作 会全量提交改动到远端，需要自己检查修改，以免提交不必要改动
 # todo 添加确认阻塞操作，避免不小心提交过多内容
 # todo 添加-pr参数（参数判断）
@@ -55,6 +58,7 @@
 
 # 默认gitme 以 rebase方式 合并
 # TODO 添加错误处理 如果没有upstream 分支怎么办
+# TODO 如何自动判断要不要install，判断更新文件中有没有podfile?
 [ "$1" = 'pull' ] && {
 	# 过滤掉第一个pull 参数
 	shift
@@ -78,20 +82,16 @@
         	o)
                 git fetch origin $currentBranch
 				git rebase origin/$currentBranch
-				checkError
                 ;;
             u)
                 git fetch upstream $currentBranch
 				git rebase upstream/$currentBranch
-				checkError
                 ;;
 	        p)
                 git push
-                checkError
                 ;;
             i)
                 pod install
-                checkError
                 ;;
             ?)  #当有不认识的选项的时候arg为?
 	            echo "unkonw argument"
@@ -126,10 +126,4 @@
 	pod install
 	gitme open
     exit 0
-}
-
-function checkError() {
-	if [[ $? -ne 0 ]]; then
-		exit 1
-	fi
 }
