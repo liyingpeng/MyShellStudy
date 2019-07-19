@@ -70,8 +70,9 @@ set -o errexit
 	git branch --set-upstream-to=origin/$currentBranch
 
 	hasSetupFetchType=false
+	shouldMerge=false
 
-	while getopts "b:oupi" arg #选项后面的冒号表示该选项需要参数
+	while getopts "b:moupi" arg #选项后面的冒号表示该选项需要参数
 	do
         case $arg in
         	b) 
@@ -79,15 +80,26 @@ set -o errexit
 					targetBranch=$OPTARG
 				fi
 				;;
+			m)
+				shouldMerge=true
+				;;
         	o)
 				hasSetupFetchType=true
                 git fetch origin $targetBranch
-				git rebase origin/$targetBranch
+                if [ "$shouldMerge" = true ]; then
+					git merge origin/$targetBranch
+				else
+					git rebase origin/$targetBranch
+				fi
                 ;;
             u)
 				hasSetupFetchType=true
                 git fetch upstream $targetBranch
-				git rebase upstream/$targetBranch
+				if [ "$shouldMerge" = true ]; then
+					git merge upstream/$targetBranch
+				else
+					git rebase upstream/$targetBranch
+				fi
                 ;;
 	        p)
                 git push --set-upstream origin $currentBranch
@@ -105,7 +117,11 @@ set -o errexit
 	if [ "$hasSetupFetchType" = false ]; then
 		# 默认执行 -o 操作
 		git fetch origin $targetBranch
-		git rebase origin/$targetBranch
+		if [ "$shouldMerge" = true ]; then
+			git merge origin/$targetBranch
+		else
+			git rebase origin/$targetBranch
+		fi
 	fi
 
 	gitme open
