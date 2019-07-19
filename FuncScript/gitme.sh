@@ -69,13 +69,7 @@ set -o errexit
 
 	git branch --set-upstream-to=origin/$currentBranch
 
-	if [ ! -n "$1" ]; then
-		# 默认执行 -o 操作
-		git fetch origin $currentBranch
-		git rebase origin/$currentBranch
-		gitme open
-	    exit 0
-	fi
+	hasSetupFetchType=false
 
 	while getopts "b:oupi" arg #选项后面的冒号表示该选项需要参数
 	do
@@ -86,10 +80,12 @@ set -o errexit
 				fi
 				;;
         	o)
+				hasSetupFetchType=true
                 git fetch origin $targetBranch
 				git rebase origin/$targetBranch
                 ;;
             u)
+				hasSetupFetchType=true
                 git fetch upstream $targetBranch
 				git rebase upstream/$targetBranch
                 ;;
@@ -105,6 +101,12 @@ set -o errexit
 		        ;;
         esac
 	done
+
+	if [ "$hasSetupFetchType" = false ]; then
+		# 默认执行 -o 操作
+		git fetch origin $targetBranch
+		git rebase origin/$targetBranch
+	fi
 
 	gitme open
 	exit 0
