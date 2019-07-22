@@ -151,3 +151,13 @@ set -o errexit
 	gitme open
     exit 0
 }
+
+[ "$1" = 'co' ] && {
+	[ "$2" = '-b' ] && {
+		git co -b "$3"
+		git push --set-upstream origin "$3"
+		exit 0
+	}
+	git co "$2"
+    exit 0
+}
