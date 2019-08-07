@@ -123,8 +123,7 @@ set -o errexit
 			git rebase origin/$targetBranch
 		fi
 	fi
-
-	gitme open
+	
 	exit 0
 }
 
@@ -148,7 +147,6 @@ set -o errexit
 
 [ "$1" = 'install' ] && {
 	pod install
-	gitme open
     exit 0
 }
 
@@ -179,6 +177,6 @@ set -o errexit
 }
 
 [ "$1" = 'publish' ] && {
-	cp /Users/liyingpeng/MyShellStudy/FuncScript/gitme.sh  /usr/local/bin/gitme
+	cp `pwd`/gitme.sh  /usr/local/bin/gitme
     exit 0
 }
