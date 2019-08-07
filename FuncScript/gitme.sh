@@ -153,11 +153,32 @@ set -o errexit
 }
 
 [ "$1" = 'co' ] && {
+	if [ ! -n "$2" ]; then
+		echo "needs argument"
+		exit 1
+	fi
 	[ "$2" = '-b' ] && {
 		git co -b "$3"
 		git push --set-upstream origin "$3"
 		exit 0
 	}
-	git co "$2"
+	currentBranch=`git symbolic-ref --short -q HEAD`
+	[ "$2" = $currentBranch ] && { 
+		echo "already in branch"
+		exit 1
+	}
+	searchBranch=`git branch -a | grep -w "$2" | head -n 1 | sed -e 's/^[ ]*//g'`
+	if [ ! -z $searchBranch ] && [ $searchBranch = "$2" ]; then
+		echo 'git co '
+		git co $searchBranch
+	    exit 0
+	fi
+	git co -b "$2" upstream/"$2"
+	git push --set-upstream origin
+    exit 0
+}
+
+[ "$1" = 'publish' ] && {
+	cp /Users/liyingpeng/MyShellStudy/FuncScript/gitme.sh  /usr/local/bin/gitme
     exit 0
 }
