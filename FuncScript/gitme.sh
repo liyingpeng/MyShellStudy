@@ -167,11 +167,17 @@ set -o errexit
 	}
 	searchBranch=`git branch -a | grep -w "$2" | head -n 1 | sed -e 's/^[ ]*//g'`
 	if [ ! -z $searchBranch ] && [ $searchBranch = "$2" ]; then
-		echo 'git co '
+		# 本地有该分支 直接checkout
 		git co $searchBranch
 	    exit 0
 	fi
-	git co -b "$2" upstream/"$2"
+	# 本地没有的话直接从远端拉取
+	git fetch upstream
+	sourceBranch=$2
+	if [ -n "$3" ]; then
+		sourceBranch=$3
+	fi
+	git co -b "$2" upstream/$sourceBranch
 	git push --set-upstream origin
     exit 0
 }
