@@ -126,20 +126,43 @@ set -o errexit
 	exit 0
 }
 
-# TODO: gitlab merge_request docs : https://docs.gitlab.com/ee/api/merge_requests.html
 [ "$1" = 'pr' ] && {
-	# 获取当前分支名
-	currentBranch=`git symbolic-ref --short -q HEAD`
-	targetBranch=""
-	if [ ! -n "$2" ]; then
-		targetBranch=$currentBranch
-	else
-		targetBranch=$2
-	fi
+	source_project_id=675
+	target_project_id=269
+	source_branch=`git symbolic-ref --short -q HEAD`
+	target_branch=$source_branch
 
-	webUrl="https://gitlab.p1staff.com/liyingpeng/putong-ios/merge_requests/new?utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=675&merge_request%5Bsource_branch%5D=${currentBranch}&merge_request%5Btarget_project_id%5D=269&merge_request%5Btarget_branch%5D=${targetBranch}"
+    oldIFS=$IFS
+	IFS=,
+	description=$(cat ~/pr_b.txt)
 
+	# 取参数前 过滤掉第一个 参数
+	shift
+
+	while getopts "b:fc" arg #选项后面的冒号表示该选项需要参数
+	do
+        case $arg in
+        	b) 
+				if [ -n $OPTARG ]; then
+					target_branch=$OPTARG
+				fi
+				;;
+			f)
+				description=$(cat ~/pr_f.txt)
+				;;
+        	c)
+				description=$(cat ~/pr_f.txt)
+                ;;
+            ?)  #当有不认识的选项的时候arg为?
+	            echo "unkonw argument"
+		        exit 1
+		        ;;
+        esac
+	done
+
+	webUrl="https://gitlab.p1staff.com/liyingpeng/putong-ios/merge_requests/new?merge_request[source_project_id]=${source_project_id}&merge_request[source_branch]=${source_branch}&merge_request[target_project_id]=${target_project_id}&merge_request[target_branch]=${target_branch}&merge_request[description]=${description}"
 	open $webUrl
+	IFS=$oldIFS
 
     exit 0
 }
