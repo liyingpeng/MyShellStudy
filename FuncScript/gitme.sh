@@ -151,7 +151,7 @@ set -o errexit
 				description=$(cat ~/pr_f.txt)
 				;;
         	c)
-				description=$(cat ~/pr_f.txt)
+				description=$(cat ~/pr_c.txt)
                 ;;
             ?)  #当有不认识的选项的时候arg为?
 	            echo "unkonw argument"
