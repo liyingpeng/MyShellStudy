@@ -139,7 +139,7 @@ set -o errexit
 	# 取参数前 过滤掉第一个 参数
 	shift
 
-	while getopts "b:fc" arg #选项后面的冒号表示该选项需要参数
+	while getopts "b:fco" arg #选项后面的冒号表示该选项需要参数
 	do
         case $arg in
         	b) 
@@ -152,6 +152,9 @@ set -o errexit
 				;;
         	c)
 				description=$(cat ~/pr_c.txt)
+                ;;
+            o)
+				description=$(cat ~/pr_o.txt)
                 ;;
             ?)  #当有不认识的选项的时候arg为?
 	            echo "unkonw argument"
