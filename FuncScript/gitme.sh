@@ -176,24 +176,29 @@ set -o errexit
 }
 
 [ "$1" = 'co' ] && {
+	RED='\033[0;31m'
+	NC='\033[0m' # No Color
+
 	if [ ! -n "$2" ]; then
-		echo "needs argument"
+		echo -e "${RED}------------ 请填写第二个参数------------${NC}"
 		exit 1
 	fi
 	[ "$2" = '-b' ] && {
 		git co -b "$3"
 		git push --set-upstream origin "$3"
+		echo -e "${RED}------------ 已从当前分支创建新分支------------${NC}"
 		exit 0
 	}
 	currentBranch=`git symbolic-ref --short -q HEAD`
 	[ "$2" = $currentBranch ] && { 
-		echo "already in branch"
+		echo -e "${RED}------------ 您已经处于该分支 不需要checkout------------${NC}"
 		exit 1
 	}
 	searchBranch=`git branch -a | grep -w "$2" | head -n 1 | sed -e 's/^[ ]*//g'`
 	if [ ! -z $searchBranch ] && [ $searchBranch = "$2" ]; then
 		# 本地有该分支 直接checkout
 		git co $searchBranch
+		echo -e "${RED}------------ 已帮您checkout到本地已有分支------------${NC}"
 	    exit 0
 	fi
 	# 本地没有的话直接从远端拉取
@@ -204,6 +209,7 @@ set -o errexit
 	fi
 	git co -b "$2" upstream/$sourceBranch
 	git push --set-upstream origin
+	echo -e "${RED}------------ 已帮您从upstream checkout本地新分支------------${NC}"
     exit 0
 }
 
